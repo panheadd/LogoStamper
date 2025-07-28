@@ -19,8 +19,10 @@ public:
     void on_AddImageButton_clicked();
     void on_ClearListButton_clicked();
     void on_DeleteImageButton_clicked();
+    void on_SelectLogoButton_clicked();
 
 private:
+    QString selectedLogoPath;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

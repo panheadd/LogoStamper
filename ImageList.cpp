@@ -2,6 +2,7 @@
 #include <QImageReader>
 
 ImageList::ImageList(QWidget *parent) : QListWidget(parent){
+
     setAcceptDrops(true);
     setDragDropMode(QAbstractItemView::DropOnly);
     setDefaultDropAction(Qt::CopyAction);
@@ -10,11 +11,12 @@ ImageList::ImageList(QWidget *parent) : QListWidget(parent){
 }
 
 void ImageList::dragEnterEvent(QDragEnterEvent *event){
+
     if(event->mimeData()->hasUrls()){
         event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
-
     }
+
 }
 
 void ImageList::dragMoveEvent(QDragMoveEvent *event)
@@ -24,15 +26,18 @@ void ImageList::dragMoveEvent(QDragMoveEvent *event)
 
 void ImageList::dropEvent(QDropEvent *event){
 
-        const QList<QUrl> urls = event->mimeData()->urls();
-        for (const QUrl &url : urls) {
-            QString filePath = url.toLocalFile();
+    const QList<QUrl> urls = event->mimeData()->urls();
 
-            QImageReader reader(filePath);
-            if (reader.canRead()) {
-                addItem(filePath);
-            }
+    for (const QUrl &url : urls) {
+        QString filePath = url.toLocalFile();
+        QImageReader reader(filePath);
+
+        if (reader.canRead()) {
+            addItem(filePath);
         }
 
-        event->acceptProposedAction();
     }
+
+    event->acceptProposedAction();
+
+}

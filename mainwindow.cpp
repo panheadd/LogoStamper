@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->AddImageButton, &QPushButton::clicked, this, &MainWindow::on_AddImageButton_clicked);
     connect(ui->ClearListButton, &QPushButton::clicked, this, &MainWindow::on_ClearListButton_clicked);
     connect(ui->DeleteImageButton, &QPushButton::clicked, this, &MainWindow::on_DeleteImageButton_clicked);
+    connect(ui->SelectLogoButton, &QPushButton::clicked, this, &MainWindow::on_SelectLogoButton_clicked);
+
 
 }
 
@@ -37,5 +39,28 @@ void MainWindow::on_DeleteImageButton_clicked(){
     QList<QListWidgetItem*> selectedItems = ui->ImageListW->selectedItems();
     for (QListWidgetItem* item : selectedItems) {
         delete ui->ImageListW->takeItem(ui->ImageListW->row(item));
+    }
+}
+
+void MainWindow::on_SelectLogoButton_clicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(
+        this,
+        "Select Logo Image",
+        QString(),
+        "Images (*.png *.jpg *.jpeg *.bmp)"
+        );
+
+    if (!filePath.isEmpty()) {
+        QPixmap logoPixmap(filePath);
+        if (!logoPixmap.isNull()) {
+            ui->LogoPreviewLabel->setPixmap(logoPixmap.scaled(
+                ui->LogoPreviewLabel->size(),
+                Qt::KeepAspectRatio,
+                Qt::SmoothTransformation
+                ));
+
+            this->selectedLogoPath = filePath;
+        }
     }
 }
