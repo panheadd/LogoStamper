@@ -90,7 +90,7 @@ void MainWindow::previewSelectedImage(int index)
             ));
     }
 
-    this->previewLogoOnImage(this->selectedLogoPath);
+    this->previewLogoOnImage(filePath ,this->selectedLogoPath);
 }
 
 
@@ -129,14 +129,9 @@ QPixmap stampLogoOnImage(const QString &imagePath, const QString &logoPath)
     return QPixmap::fromImage(result.copy());
 }
 
-void MainWindow::previewLogoOnImage(const QString &logoPath)
+void MainWindow::previewLogoOnImage(const QString &path, const QString &logoPath)
 {
-    QListWidgetItem *item = ui->ImageListW->currentItem();
-    if (!item || logoPath.isEmpty())
-        return;
-
-    QString imagePath = item->data(Qt::UserRole).toString();
-    QPixmap result = stampLogoOnImage(imagePath, logoPath);
+    QPixmap result = stampLogoOnImage(path, logoPath);
     if (!result.isNull()) {
         ui->ResultPreviewLabel->setPixmap(result.scaled(
             ui->ResultPreviewLabel->size(),

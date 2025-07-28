@@ -21,7 +21,7 @@ public:
     void on_DeleteImageButton_clicked();
     void on_SelectLogoButton_clicked();
     void previewSelectedImage(int index);
-    void previewLogoOnImage(const QString &logoPath);
+    void previewLogoOnImage(const QString &path,const QString &logoPath);
 
 private:
     QString selectedLogoPath;
