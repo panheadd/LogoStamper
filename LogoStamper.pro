@@ -24,3 +24,7 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+INCLUDEPATH += /opt/homebrew/opt/opencv/include/opencv4
+LIBS += -L/opt/homebrew/opt/opencv/lib \
+    -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc

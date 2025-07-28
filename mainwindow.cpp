@@ -2,6 +2,9 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include "ImageList.h"
+#include <opencv2/opencv.hpp>
+#include <QImage>
+#include <QPixmap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -82,6 +85,61 @@ void MainWindow::previewSelectedImage(int index)
     if (!img.isNull()) {
         ui->ImagePreviewLabel->setPixmap(img.scaled(
             ui->ImagePreviewLabel->size(),
+            Qt::KeepAspectRatio,
+            Qt::SmoothTransformation
+            ));
+    }
+
+    this->previewLogoOnImage(this->selectedLogoPath);
+}
+
+
+QPixmap stampLogoOnImage(const QString &imagePath, const QString &logoPath)
+{
+    cv::Mat mainImg = cv::imread(imagePath.toStdString(), cv::IMREAD_UNCHANGED);
+    cv::Mat logoImg = cv::imread(logoPath.toStdString(), cv::IMREAD_UNCHANGED);
+
+    if (mainImg.empty() || logoImg.empty())
+        return QPixmap(); // Fail safely
+
+    // Resize logo if it's too big
+    int logoWidth = mainImg.cols / 4;
+    int logoHeight = (logoWidth * logoImg.rows) / logoImg.cols;
+    cv::resize(logoImg, logoImg, cv::Size(logoWidth, logoHeight));
+
+    // Position (bottom-right corner)
+    int x = mainImg.cols - logoImg.cols - 10;
+    int y = mainImg.rows - logoImg.rows - 10;
+
+    // Handle alpha channel if logo has transparency
+    for (int i = 0; i < logoImg.rows; ++i) {
+        for (int j = 0; j < logoImg.cols; ++j) {
+            cv::Vec4b &logoPixel = logoImg.at<cv::Vec4b>(i, j);
+            if (logoPixel[3] > 0) { // alpha channel > 0
+                cv::Vec3b &mainPixel = mainImg.at<cv::Vec3b>(y + i, x + j);
+                for (int c = 0; c < 3; ++c)
+                    mainPixel[c] = (logoPixel[c] * logoPixel[3] + mainPixel[c] * (255 - logoPixel[3])) / 255;
+            }
+        }
+    }
+
+    // Convert to QImage and return
+    cv::cvtColor(mainImg, mainImg, cv::COLOR_BGR2RGB);
+    QImage result((uchar *)mainImg.data, mainImg.cols, mainImg.rows, mainImg.step, QImage::Format_RGB888);
+    return QPixmap::fromImage(result.copy());
+}
+
+void MainWindow::previewLogoOnImage(const QString &logoPath)
+{
+    QListWidgetItem *item = ui->ImageListW->currentItem();
+    if (!item || logoPath.isEmpty())
+        return;
+
+    QString imagePath = item->data(Qt::UserRole).toString();
+    QPixmap result = stampLogoOnImage(imagePath, logoPath);
+    if (!result.isNull()) {
+        ui->ResultPreviewLabel->setPixmap(result.scaled(
+            ui->ResultPreviewLabel->size(),
             Qt::KeepAspectRatio,
             Qt::SmoothTransformation
             ));
