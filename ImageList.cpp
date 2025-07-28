@@ -33,7 +33,9 @@ void ImageList::dropEvent(QDropEvent *event){
         QImageReader reader(filePath);
 
         if (reader.canRead()) {
-            addItem(filePath);
+            QListWidgetItem *item = new QListWidgetItem(QFileInfo(filePath).fileName());
+            item->setData(Qt::UserRole, filePath);
+            this->addItem(item);
         }
 
     }
