@@ -145,7 +145,7 @@
       </widget>
      </item>
      <item>
-      <widget class="ImageList" name="ImageList">
+      <widget class="ImageList" name="ImageListW">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -269,7 +269,7 @@
   <customwidget>
    <class>ImageList</class>
    <extends>QListWidget</extends>
-   <header>imagelist.h</header>
+   <header location="global">ImageList.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

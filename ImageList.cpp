@@ -9,17 +9,28 @@ ImageList::ImageList(QWidget *parent) : QListWidget(parent){
 
 void ImageList::dragEnterEvent(QDragEnterEvent *event){
     if(event->mimeData()->hasUrls()){
+        event->setDropAction(Qt::CopyAction);
         event->acceptProposedAction();
+
     }
 }
 
-void ImageList::dropEvent(QDropEvent *event){
-    const QList<QUrl> urls = event->mimeData()->urls();
-    for(const QUrl &url : urls) {
-        QString filePath = url.toLocalFile();
-        QImageReader imageReader(filePath);
-        if(imageReader.canRead()){
-            addItem(filePath);
-        }
-    }
+void ImageList::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->acceptProposedAction();
 }
+
+void ImageList::dropEvent(QDropEvent *event){
+
+        const QList<QUrl> urls = event->mimeData()->urls();
+        for (const QUrl &url : urls) {
+            QString filePath = url.toLocalFile();
+
+            QImageReader reader(filePath);
+            if (reader.canRead()) {
+                addItem(filePath);
+            }
+        }
+
+        event->acceptProposedAction();
+    }
