@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setFixedSize(800, 600); // width x height
     connect(ui->AddImageButton, &QPushButton::clicked, this, &MainWindow::on_AddImageButton_clicked);
+    connect(ui->ClearListButton, &QPushButton::clicked, this, &MainWindow::on_ClearListButton_clicked);
 
 }
 
@@ -25,4 +26,7 @@ void MainWindow::on_AddImageButton_clicked()
     for (const QString &path : paths) {
         ui->ImageListW->addItem(path);
     }
+}
+void MainWindow::on_ClearListButton_clicked(){
+    ui->ImageListW->clear();
 }

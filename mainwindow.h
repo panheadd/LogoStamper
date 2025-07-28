@@ -17,6 +17,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void on_AddImageButton_clicked();
+    void on_ClearListButton_clicked();
 
 private:
     Ui::MainWindow *ui;
