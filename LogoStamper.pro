@@ -13,6 +13,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    ImageList.h \
     mainwindow.h
 
 FORMS += \
