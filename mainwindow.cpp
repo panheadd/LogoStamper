@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFixedSize(800, 600); // width x height
     connect(ui->AddImageButton, &QPushButton::clicked, this, &MainWindow::on_AddImageButton_clicked);
     connect(ui->ClearListButton, &QPushButton::clicked, this, &MainWindow::on_ClearListButton_clicked);
+    connect(ui->DeleteImageButton, &QPushButton::clicked, this, &MainWindow::on_DeleteImageButton_clicked);
 
 }
 
@@ -27,6 +28,14 @@ void MainWindow::on_AddImageButton_clicked()
         ui->ImageListW->addItem(path);
     }
 }
+
 void MainWindow::on_ClearListButton_clicked(){
     ui->ImageListW->clear();
+}
+
+void MainWindow::on_DeleteImageButton_clicked(){
+    QList<QListWidgetItem*> selectedItems = ui->ImageListW->selectedItems();
+    for (QListWidgetItem* item : selectedItems) {
+        delete ui->ImageListW->takeItem(ui->ImageListW->row(item));
+    }
 }

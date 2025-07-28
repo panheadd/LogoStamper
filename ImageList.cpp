@@ -5,6 +5,8 @@ ImageList::ImageList(QWidget *parent) : QListWidget(parent){
     setAcceptDrops(true);
     setDragDropMode(QAbstractItemView::DropOnly);
     setDefaultDropAction(Qt::CopyAction);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+
 }
 
 void ImageList::dragEnterEvent(QDragEnterEvent *event){

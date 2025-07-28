@@ -18,6 +18,7 @@ public:
     ~MainWindow();
     void on_AddImageButton_clicked();
     void on_ClearListButton_clicked();
+    void on_DeleteImageButton_clicked();
 
 private:
     Ui::MainWindow *ui;
