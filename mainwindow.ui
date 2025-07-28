@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1200</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,29 +30,29 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>380</y>
-      <width>771</width>
-      <height>151</height>
+      <y>660</y>
+      <width>1171</width>
+      <height>71</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="ButtonLayout" stretch="0">
      <property name="spacing">
-      <number>50</number>
+      <number>0</number>
      </property>
      <property name="sizeConstraint">
       <enum>QLayout::SetNoConstraint</enum>
      </property>
      <property name="leftMargin">
-      <number>150</number>
+      <number>0</number>
      </property>
      <property name="topMargin">
-      <number>50</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
-      <number>150</number>
+      <number>0</number>
      </property>
      <property name="bottomMargin">
-      <number>50</number>
+      <number>0</number>
      </property>
      <item>
       <widget class="QPushButton" name="ApplyButton">
@@ -111,11 +111,11 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>398</width>
-      <height>351</height>
+      <width>601</width>
+      <height>641</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
      <property name="sizeConstraint">
       <enum>QLayout::SetNoConstraint</enum>
      </property>
@@ -167,14 +167,66 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="AddImageButton">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="DeleteImageButton">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Delete Image</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="ClearListButton">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Clear List</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="AddImageButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="baseSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Add Image</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="ImagePreviewLabel">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="baseSize">
+       <property name="minimumSize">
         <size>
          <width>0</width>
          <height>0</height>
@@ -182,35 +234,18 @@
        </property>
        <property name="font">
         <font>
+         <pointsize>39</pointsize>
          <bold>true</bold>
         </font>
        </property>
        <property name="text">
-        <string>Add Image</string>
+        <string>Image Preview</string>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="DeleteImageButton">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
+       <property name="scaledContents">
+        <bool>false</bool>
        </property>
-       <property name="text">
-        <string>Delete Image</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="ClearListButton">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Clear List</string>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -219,10 +254,10 @@
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>9</y>
-      <width>351</width>
-      <height>351</height>
+      <x>670</x>
+      <y>10</y>
+      <width>511</width>
+      <height>641</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -280,6 +315,37 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QLabel" name="ResultPreviewLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>39</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Logo Preview</string>
+       </property>
+       <property name="scaledContents">
+        <bool>false</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -288,7 +354,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1200</width>
      <height>37</height>
     </rect>
    </property>
