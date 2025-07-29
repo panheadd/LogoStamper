@@ -20,6 +20,7 @@ public:
     void on_ClearListButton_clicked();
     void on_DeleteImageButton_clicked();
     void on_SelectLogoButton_clicked();
+    void on_ApplyButton_clicked();
     void previewSelectedImage(int index);
     void previewLogoOnImage(const QString &path,const QString &logoPath);
 

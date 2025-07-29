@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ClearListButton, &QPushButton::clicked, this, &MainWindow::on_ClearListButton_clicked);
     connect(ui->DeleteImageButton, &QPushButton::clicked, this, &MainWindow::on_DeleteImageButton_clicked);
     connect(ui->SelectLogoButton, &QPushButton::clicked, this, &MainWindow::on_SelectLogoButton_clicked);
+    connect(ui->ApplyButton, &QPushButton::clicked, this, &MainWindow::on_ApplyButton_clicked);
+
     connect(ui->ImageListW, &QListWidget::currentRowChanged, this, &MainWindow::previewSelectedImage);
     connect(ui->ImageListW, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
         int index = ui->ImageListW->row(item);
@@ -162,6 +164,31 @@ void MainWindow::previewLogoOnImage(const QString &path, const QString &logoPath
             ));
     } else {
         return;
+    }
+}
+
+
+void MainWindow::on_ApplyButton_clicked(){
+    QString saveDir = QFileDialog::getExistingDirectory(this, "Select Folder to Save Stamped Images");
+
+    if (saveDir.isEmpty())
+        return;
+
+    for (int i = 0; i < ui->ImageListW->count(); ++i)
+    {
+        QListWidgetItem *item = ui->ImageListW->item(i);
+        QString imagePath = item->data(Qt::UserRole).toString();
+
+        QPixmap stamped = stampLogoOnImage(imagePath, this->selectedLogoPath);
+        if (stamped.isNull())
+            continue;
+
+        QFileInfo fileInfo(imagePath);
+        QString baseName = fileInfo.completeBaseName();
+        QString extension = fileInfo.suffix();
+
+        QString savePath = saveDir + "/" + baseName + "_stamped." + extension;
+        stamped.save(savePath);
     }
 }
 
