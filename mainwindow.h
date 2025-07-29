@@ -26,6 +26,7 @@ public:
     QPixmap stampLogoOnImage(const cv::Mat &inputImage, const QString &logoPath);
     void previewSelectedImage(int index);
     void previewLogoOnImage(const QString &path,const QString &logoPath);
+    void onCustomCheckboxToggled(bool checked);
 
 private:
     QString selectedLogoPath;
@@ -34,5 +35,6 @@ private:
     bool checkbox2 = false;
     bool checkbox3 = false;
     bool checkbox4 = false;
+    bool customCheckBox = false;
 };
 #endif // MAINWINDOW_H

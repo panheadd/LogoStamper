@@ -35,8 +35,18 @@ MainWindow::MainWindow(QWidget *parent)
         checkbox4 = checked;
         qDebug() << "Checkbox toggled, new value:" << checkbox4;
     });
+    ui->widthLineEdit->setEnabled(false);
+    ui->heightLineEdit->setEnabled(false);
+
+    connect(ui->customCheckBox, &QCheckBox::toggled, this, [=](bool checked) {
+        customCheckBox = checked;
+        ui->widthLineEdit->setEnabled(checked);
+        ui->heightLineEdit->setEnabled(checked);
+        qDebug() << "Custom checkbox toggled, new value:" << customCheckBox;
+    });
 
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -202,7 +212,7 @@ void MainWindow::previewLogoOnImage(const QString &path, const QString &logoPath
 
 
 void MainWindow::on_ApplyButton_clicked(){
-    if(!(this->checkbox1||this->checkbox2||this->checkbox3||this->checkbox4)){
+    if(!(this->checkbox1||this->checkbox2||this->checkbox3||this->checkbox4||this->customCheckBox)){
         return;
     }
     QString saveDir = QFileDialog::getExistingDirectory(this, "Select Folder to Save Stamped Images");
@@ -230,6 +240,26 @@ void MainWindow::on_ApplyButton_clicked(){
     if(this->checkbox4){
         folders.push_back( "Original");
         sizes.push_back(QSize(0,0));
+    }
+    if(this->customCheckBox){
+        QString width = ui->widthLineEdit->text();
+        QString height = ui->heightLineEdit->text();
+
+        if (!width.isEmpty() && !height.isEmpty()){
+            bool widthOk = false;
+            bool heightOk = false;
+
+            int widthInt = width.toInt(&widthOk);
+            int heightInt = height.toInt(&heightOk);
+
+            if(widthOk && heightOk){
+                QString folderName = width+"x"+height;
+                folders.push_back(folderName);
+                sizes.push_back(QSize(widthInt,heightInt));
+            }
+
+        }
+
     }
 
 
