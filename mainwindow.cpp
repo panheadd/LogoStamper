@@ -94,9 +94,12 @@ void MainWindow::previewSelectedImage(int index)
             Qt::KeepAspectRatio,
             Qt::SmoothTransformation
             ));
-    }
 
-    this->previewLogoOnImage(filePath ,this->selectedLogoPath);
+        this->previewLogoOnImage(filePath ,this->selectedLogoPath);
+    }
+    else{
+        ui->ImagePreviewLabel->clear();
+    }
 }
 
 
