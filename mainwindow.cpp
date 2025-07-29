@@ -77,6 +77,10 @@ void MainWindow::on_SelectLogoButton_clicked()
             ui->LogoPreviewLabel->clear();
         }
     }
+    if (ui->ImageListW->count() == 1) {
+        ui->ImageListW->setCurrentRow(0);
+        previewSelectedImage(0);
+    }
 }
 
 void MainWindow::previewSelectedImage(int index)
