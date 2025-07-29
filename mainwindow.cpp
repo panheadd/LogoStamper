@@ -17,12 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->DeleteImageButton, &QPushButton::clicked, this, &MainWindow::on_DeleteImageButton_clicked);
     connect(ui->SelectLogoButton, &QPushButton::clicked, this, &MainWindow::on_SelectLogoButton_clicked);
     connect(ui->ApplyButton, &QPushButton::clicked, this, &MainWindow::on_ApplyButton_clicked);
-
     connect(ui->ImageListW, &QListWidget::currentRowChanged, this, &MainWindow::previewSelectedImage);
-    connect(ui->ImageListW, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
-        int index = ui->ImageListW->row(item);
-        previewSelectedImage(index);
-    });
 
 
 }
@@ -40,6 +35,10 @@ void MainWindow::on_AddImageButton_clicked()
         QListWidgetItem *item = new QListWidgetItem(QFileInfo(path).fileName());
         item->setData(Qt::UserRole, path);
         ui->ImageListW->addItem(item);
+    }
+    if (ui->ImageListW->count() == 1) {
+        ui->ImageListW->setCurrentRow(0);
+        previewSelectedImage(0);
     }
 }
 
