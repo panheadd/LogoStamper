@@ -23,7 +23,7 @@ public:
     void on_SelectLogoButton_clicked();
     void on_ApplyButton_clicked();
     QPixmap stampLogoOnImage(const QString &imagePath, const QString &logoPath);
-    QPixmap stampLogoOnImageCV(const cv::Mat &inputImage, const QString &logoPath);
+    QPixmap stampLogoOnImage(const cv::Mat &inputImage, const QString &logoPath);
     void previewSelectedImage(int index);
     void previewLogoOnImage(const QString &path,const QString &logoPath);
 
