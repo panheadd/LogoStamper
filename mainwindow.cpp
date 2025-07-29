@@ -74,6 +74,9 @@ void MainWindow::on_SelectLogoButton_clicked()
 
             this->selectedLogoPath = filePath;
         }
+        else{
+            ui->LogoPreviewLabel->clear();
+        }
     }
 }
 
