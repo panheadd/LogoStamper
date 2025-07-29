@@ -19,6 +19,22 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ApplyButton, &QPushButton::clicked, this, &MainWindow::on_ApplyButton_clicked);
     connect(ui->ImageListW, &QListWidget::currentRowChanged, this, &MainWindow::previewSelectedImage);
 
+    connect(ui->sizeCheckBox, &QCheckBox::toggled, this, [=](bool checked) {
+        checkbox1 = checked;
+        qDebug() << "Checkbox toggled, new value:" << checkbox1;
+    });
+    connect(ui->sizeCheckBox2, &QCheckBox::toggled, this, [=](bool checked) {
+        checkbox2 = checked;
+        qDebug() << "Checkbox toggled, new value:" << checkbox2;
+    });
+    connect(ui->sizeCheckBox3, &QCheckBox::toggled, this, [=](bool checked) {
+        checkbox3 = checked;
+        qDebug() << "Checkbox toggled, new value:" << checkbox3;
+    });
+    connect(ui->sizeCheckBox4, &QCheckBox::toggled, this, [=](bool checked) {
+        checkbox4 = checked;
+        qDebug() << "Checkbox toggled, new value:" << checkbox4;
+    });
 
 }
 
@@ -186,14 +202,36 @@ void MainWindow::previewLogoOnImage(const QString &path, const QString &logoPath
 
 
 void MainWindow::on_ApplyButton_clicked(){
+    if(!(this->checkbox1||this->checkbox2||this->checkbox3||this->checkbox4)){
+        return;
+    }
     QString saveDir = QFileDialog::getExistingDirectory(this, "Select Folder to Save Stamped Images");
 
     if (saveDir.isEmpty())
         return;
 
     QDir dir(saveDir);
-    QStringList folders = { "640x426", "900x600", "1620x1080" };
-    QList<QSize> sizes = { QSize(640, 426), QSize(900, 600), QSize(1620, 1080) };
+
+    QStringList folders = {};
+    QList<QSize> sizes = {};
+
+    if(this->checkbox1){
+        folders.push_back( "640x426");
+        sizes.push_back(QSize(640, 426));
+    }
+    if(this->checkbox2){
+        folders.push_back( "900x600");
+        sizes.push_back(QSize(900, 600));
+    }
+    if(this->checkbox3){
+        folders.push_back( "1620x1080");
+        sizes.push_back(QSize(1620, 1080));
+    }
+    if(this->checkbox4){
+        folders.push_back( "Original");
+        sizes.push_back(QSize(0,0));
+    }
+
 
     for (const QString &folder : folders) {
         dir.mkdir(folder);
@@ -221,9 +259,14 @@ void MainWindow::on_ApplyButton_clicked(){
                 continue;
 
             cv::Mat resizedInput;
-            cv::resize(input, resizedInput, cv::Size(targetSize.width(), targetSize.height()), 0, 0, cv::INTER_AREA);
-            QPixmap stamped = stampLogoOnImage(resizedInput, this->selectedLogoPath);
+            if(targetSize == QSize(0,0)){
+                resizedInput = input;
+            }
+            else{
+                cv::resize(input, resizedInput, cv::Size(targetSize.width(), targetSize.height()), 0, 0, cv::INTER_AREA);
+            }
 
+            QPixmap stamped = stampLogoOnImage(resizedInput, this->selectedLogoPath);
 
             if (stamped.isNull())
                 continue;

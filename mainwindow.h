@@ -30,5 +30,9 @@ public:
 private:
     QString selectedLogoPath;
     Ui::MainWindow *ui;
+    bool checkbox1 = false;
+    bool checkbox2 = false;
+    bool checkbox3 = false;
+    bool checkbox4 = false;
 };
 #endif // MAINWINDOW_H
