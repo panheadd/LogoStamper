@@ -66,12 +66,16 @@ void MainWindow::on_AddImageButton_clicked()
 
 void MainWindow::on_ClearListButton_clicked(){
     ui->ImageListW->clear();
+    ui->ResultPreviewLabel->clear();
 }
 
 void MainWindow::on_DeleteImageButton_clicked(){
     QList<QListWidgetItem*> selectedItems = ui->ImageListW->selectedItems();
     for (QListWidgetItem* item : selectedItems) {
         delete ui->ImageListW->takeItem(ui->ImageListW->row(item));
+    }
+    if(ui->ImageListW->count() == 0){
+        ui->ResultPreviewLabel->clear();
     }
 }
 
@@ -99,20 +103,17 @@ void MainWindow::on_SelectLogoButton_clicked()
             ui->LogoPreviewLabel->clear();
         }
     }
-    if (ui->ImageListW->count() == 1) {
-        ui->ImageListW->setCurrentRow(0);
-        previewSelectedImage(0);
+    if (ui->ImageListW->count() > 0) {
+        previewSelectedImage(ui->ImageListW->currentRow());
     }
 }
 
 void MainWindow::on_DeleteLogoButton_clicked(){
     this->selectedLogoPath = nullptr;
     this->ui->LogoPreviewLabel->clear();
-    if (ui->ImageListW->count() == 1) {
-        ui->ImageListW->setCurrentRow(0);
-        previewSelectedImage(0);
+    if (ui->ImageListW->count() > 0) {
+        previewSelectedImage(ui->ImageListW->currentRow());
     }
-
 }
 
 void MainWindow::previewSelectedImage(int index)
@@ -154,6 +155,14 @@ QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString &l
         return QPixmap();
 
     cv::Mat mainImg = inputImage.clone();
+
+    if (logoPath == nullptr) {
+        cv::Mat rgbImg;
+        cv::cvtColor(mainImg, rgbImg, cv::COLOR_BGR2RGB);
+        QImage result((uchar *)rgbImg.data, rgbImg.cols, rgbImg.rows, rgbImg.step, QImage::Format_RGB888);
+        return QPixmap::fromImage(result.copy());
+    }
+
     cv::Mat logoImg = cv::imread(logoPath.toStdString(), cv::IMREAD_UNCHANGED);
 
     if (logoImg.empty())
