@@ -214,10 +214,12 @@ QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString &l
         return QPixmap();
 
     if (logoImg.channels() == 4) {
+        const float opacity = 0.5f;
         for (int i = 0; i < logoImg.rows; ++i) {
             for (int j = 0; j < logoImg.cols; ++j) {
                 cv::Vec4b logoPixel = logoImg.at<cv::Vec4b>(i, j);
-                uchar alpha = logoPixel[3];
+                uchar originalAlpha = logoPixel[3];
+                uchar alpha = static_cast<uchar>(originalAlpha * opacity);
 
                 if (alpha > 0) {
                     cv::Vec3b &mainPixel = mainImg.at<cv::Vec3b>(y + i, x + j);
