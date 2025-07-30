@@ -16,24 +16,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ClearListButton, &QPushButton::clicked, this, &MainWindow::on_ClearListButton_clicked);
     connect(ui->DeleteImageButton, &QPushButton::clicked, this, &MainWindow::on_DeleteImageButton_clicked);
     connect(ui->SelectLogoButton, &QPushButton::clicked, this, &MainWindow::on_SelectLogoButton_clicked);
+    connect(ui->DeleteLogoButton, &QPushButton::clicked, this, &MainWindow::on_DeleteLogoButton_clicked);
     connect(ui->ApplyButton, &QPushButton::clicked, this, &MainWindow::on_ApplyButton_clicked);
     connect(ui->ImageListW, &QListWidget::currentRowChanged, this, &MainWindow::previewSelectedImage);
 
     connect(ui->sizeCheckBox, &QCheckBox::toggled, this, [=](bool checked) {
         checkbox1 = checked;
-        qDebug() << "Checkbox toggled, new value:" << checkbox1;
     });
     connect(ui->sizeCheckBox2, &QCheckBox::toggled, this, [=](bool checked) {
         checkbox2 = checked;
-        qDebug() << "Checkbox toggled, new value:" << checkbox2;
     });
     connect(ui->sizeCheckBox3, &QCheckBox::toggled, this, [=](bool checked) {
         checkbox3 = checked;
-        qDebug() << "Checkbox toggled, new value:" << checkbox3;
     });
     connect(ui->sizeCheckBox4, &QCheckBox::toggled, this, [=](bool checked) {
         checkbox4 = checked;
-        qDebug() << "Checkbox toggled, new value:" << checkbox4;
     });
     ui->widthLineEdit->setEnabled(false);
     ui->heightLineEdit->setEnabled(false);
@@ -42,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
         customCheckBox = checked;
         ui->widthLineEdit->setEnabled(checked);
         ui->heightLineEdit->setEnabled(checked);
-        qDebug() << "Custom checkbox toggled, new value:" << customCheckBox;
     });
 
 }
@@ -107,6 +103,11 @@ void MainWindow::on_SelectLogoButton_clicked()
         ui->ImageListW->setCurrentRow(0);
         previewSelectedImage(0);
     }
+}
+
+void MainWindow::on_DeleteLogoButton_clicked(){
+    this->selectedLogoPath = nullptr;
+    this->ui->LogoPreviewLabel->clear();
 }
 
 void MainWindow::previewSelectedImage(int index)

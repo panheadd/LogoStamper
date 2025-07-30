@@ -27,6 +27,7 @@ public:
     void previewSelectedImage(int index);
     void previewLogoOnImage(const QString &path,const QString &logoPath);
     void onCustomCheckboxToggled(bool checked);
+    void on_DeleteLogoButton_clicked();
 
 private:
     QString selectedLogoPath;
