@@ -108,6 +108,11 @@ void MainWindow::on_SelectLogoButton_clicked()
 void MainWindow::on_DeleteLogoButton_clicked(){
     this->selectedLogoPath = nullptr;
     this->ui->LogoPreviewLabel->clear();
+    if (ui->ImageListW->count() == 1) {
+        ui->ImageListW->setCurrentRow(0);
+        previewSelectedImage(0);
+    }
+
 }
 
 void MainWindow::previewSelectedImage(int index)
@@ -194,20 +199,34 @@ QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString &l
 
 void MainWindow::previewLogoOnImage(const QString &path, const QString &logoPath)
 {
-    if (path.isEmpty() || logoPath.isEmpty()) {
+    if (path.isEmpty()) {
 
         return;
     }
-
-    QPixmap result = stampLogoOnImage(path, logoPath);
-    if (!result.isNull()) {
-        ui->ResultPreviewLabel->setPixmap(result.scaled(
-            ui->ResultPreviewLabel->size(),
-            Qt::KeepAspectRatio,
-            Qt::SmoothTransformation
-            ));
-    } else {
-        return;
+    if(logoPath == nullptr){
+        QPixmap result;
+        result.load(path);
+        if (!result.isNull()) {
+            ui->ResultPreviewLabel->setPixmap(result.scaled(
+                ui->ResultPreviewLabel->size(),
+                Qt::KeepAspectRatio,
+                Qt::SmoothTransformation
+                ));
+        } else {
+            return;
+        }
+    }
+    else{
+        QPixmap result = stampLogoOnImage(path, logoPath);
+        if (!result.isNull()) {
+            ui->ResultPreviewLabel->setPixmap(result.scaled(
+                ui->ResultPreviewLabel->size(),
+                Qt::KeepAspectRatio,
+                Qt::SmoothTransformation
+                ));
+        } else {
+            return;
+        }
     }
 }
 
