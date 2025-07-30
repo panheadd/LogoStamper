@@ -6,6 +6,7 @@
 #include <QImage>
 #include <QPixmap>
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -41,6 +42,13 @@ MainWindow::MainWindow(QWidget *parent)
         ui->heightLineEdit->setEnabled(checked);
     });
 
+    connect(ui->comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, [=](int index){
+        this->logoPosition = getSelectedLogoPosition(index);
+        if (ui->ImageListW->count() > 0) {
+            previewSelectedImage(ui->ImageListW->currentRow());
+        }
+            });
 }
 
 
@@ -172,8 +180,36 @@ QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString &l
     int logoHeight = (logoWidth * logoImg.rows) / logoImg.cols;
     cv::resize(logoImg, logoImg, cv::Size(logoWidth, logoHeight));
 
-    int x = mainImg.cols - logoImg.cols - 10;
-    int y = mainImg.rows - logoImg.rows - 10;
+
+    int x = 0, y = 0,margin = 10;
+
+    switch (this->logoPosition) {
+    case LogoPosition::BottomRight:
+        x = mainImg.cols - logoImg.cols - margin;
+        y = mainImg.rows - logoImg.rows - margin;
+        break;
+    case LogoPosition::BottomLeft:
+        x = margin;
+        y = mainImg.rows - logoImg.rows - margin;
+        break;
+    case LogoPosition::TopRight:
+        x = mainImg.cols - logoImg.cols - margin;
+        y = margin;
+        break;
+    case LogoPosition::TopLeft:
+        x = margin;
+        y = margin;
+        break;
+    case LogoPosition::Center:
+        x = (mainImg.cols - logoImg.cols) / 2;
+        y = (mainImg.rows - logoImg.rows) / 2;
+        break;
+    default:
+        x = margin;
+        y = margin;
+        break;
+    }
+
     if (x < 0 || y < 0)
         return QPixmap();
 
@@ -335,5 +371,17 @@ void MainWindow::on_ApplyButton_clicked(){
         }
     }
 }
+
+MainWindow::LogoPosition MainWindow::getSelectedLogoPosition(int index) {
+    switch (index) {
+    case 0: return LogoPosition::Center;
+    case 1: return LogoPosition::TopLeft;
+    case 2: return LogoPosition::TopRight;
+    case 3: return LogoPosition::BottomRight;
+    case 4: return LogoPosition::BottomLeft;
+    default: return LogoPosition::Center;
+    }
+}
+
 
 

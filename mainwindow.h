@@ -15,6 +15,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
+    enum class LogoPosition {
+        Center,
+        TopLeft,
+        TopRight,
+        BottomRight,
+        BottomLeft
+    };
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void on_AddImageButton_clicked();
@@ -28,6 +37,7 @@ public:
     void previewLogoOnImage(const QString &path,const QString &logoPath);
     void onCustomCheckboxToggled(bool checked);
     void on_DeleteLogoButton_clicked();
+    LogoPosition getSelectedLogoPosition(int index);
 
 private:
     QString selectedLogoPath;
@@ -37,5 +47,6 @@ private:
     bool checkbox3 = false;
     bool checkbox4 = false;
     bool customCheckBox = false;
+    LogoPosition logoPosition = MainWindow::LogoPosition::Center;
 };
 #endif // MAINWINDOW_H
