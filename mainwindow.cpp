@@ -116,13 +116,40 @@ void MainWindow::on_SelectLogoButton_clicked()
     }
 }
 
-void MainWindow::on_DeleteLogoButton_clicked(){
-    this->selectedLogoPath = nullptr;
-    this->ui->LogoPreviewLabel->clear();
+void MainWindow::on_DeleteLogoButton_clicked() {
+    this->selectedLogoPath.clear();
+    this->cachedLogoImage.release();
+    ui->LogoPreviewLabel->clear();
     if (ui->ImageListW->count() > 0) {
         previewSelectedImage(ui->ImageListW->currentRow());
     }
 }
+
+void MainWindow::setScaledPixmap(QLabel *label, const QPixmap &pixmap) {
+    if (!pixmap.isNull()) {
+        label->setPixmap(pixmap.scaled(label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    } else {
+        label->clear();
+    }
+}
+
+cv::Mat MainWindow::getResizedLogo(int baseWidth) {
+    if (!this->selectedLogoPath.isEmpty() && this->cachedLogoImage.empty()) {
+        this->cachedLogoImage = cv::imread(this->selectedLogoPath.toStdString(), cv::IMREAD_UNCHANGED);
+    }
+
+    if (this->cachedLogoImage.empty())
+        return {};
+
+    int logoWidth = baseWidth / 4;
+    int logoHeight = (logoWidth * cachedLogoImage.rows) / cachedLogoImage.cols;
+
+    cv::Mat resizedLogo;
+    cv::resize(cachedLogoImage, resizedLogo, cv::Size(logoWidth, logoHeight));
+    return resizedLogo;
+}
+
+
 
 void MainWindow::previewSelectedImage(int index)
 {
@@ -157,31 +184,24 @@ QPixmap MainWindow::stampLogoOnImage(const QString &imagePath, const QString &lo
 }
 
 
-QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString &logoPath)
-{
+QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString & /*logoPath*/) {
     if (inputImage.empty())
         return QPixmap();
 
     cv::Mat mainImg = inputImage.clone();
 
-    if (logoPath == nullptr) {
-        cv::Mat rgbImg;
-        cv::cvtColor(mainImg, rgbImg, cv::COLOR_BGR2RGB);
-        QImage result((uchar *)rgbImg.data, rgbImg.cols, rgbImg.rows, rgbImg.step, QImage::Format_RGB888);
+    if (this->selectedLogoPath.isEmpty()) {
+        cv::cvtColor(mainImg, mainImg, cv::COLOR_BGR2RGB);
+        QImage result((uchar *)mainImg.data, mainImg.cols, mainImg.rows, mainImg.step, QImage::Format_RGB888);
         return QPixmap::fromImage(result.copy());
     }
 
-    cv::Mat logoImg = cv::imread(logoPath.toStdString(), cv::IMREAD_UNCHANGED);
-
+    cv::Mat logoImg = getResizedLogo(mainImg.cols);
     if (logoImg.empty())
         return QPixmap();
 
-    int logoWidth = mainImg.cols / 4;
-    int logoHeight = (logoWidth * logoImg.rows) / logoImg.cols;
-    cv::resize(logoImg, logoImg, cv::Size(logoWidth, logoHeight));
-
-
-    int x = 0, y = 0,margin = 10;
+    int margin = 10;
+    int x = 0, y = 0;
 
     switch (this->logoPosition) {
     case LogoPosition::BottomRight:
@@ -218,9 +238,7 @@ QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString &l
         for (int i = 0; i < logoImg.rows; ++i) {
             for (int j = 0; j < logoImg.cols; ++j) {
                 cv::Vec4b logoPixel = logoImg.at<cv::Vec4b>(i, j);
-                uchar originalAlpha = logoPixel[3];
-                uchar alpha = static_cast<uchar>(originalAlpha * opacity);
-
+                uchar alpha = static_cast<uchar>(logoPixel[3] * opacity);
                 if (alpha > 0) {
                     cv::Vec3b &mainPixel = mainImg.at<cv::Vec3b>(y + i, x + j);
                     for (int c = 0; c < 3; ++c)
@@ -234,8 +252,6 @@ QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString &l
                 mainImg.at<cv::Vec3b>(y + i, x + j) = logoImg.at<cv::Vec3b>(i, j);
             }
         }
-    } else {
-        return QPixmap();
     }
 
     cv::cvtColor(mainImg, mainImg, cv::COLOR_BGR2RGB);
@@ -244,13 +260,14 @@ QPixmap MainWindow::stampLogoOnImage(const cv::Mat &inputImage, const QString &l
 }
 
 
+
 void MainWindow::previewLogoOnImage(const QString &path, const QString &logoPath)
 {
     if (path.isEmpty()) {
 
         return;
     }
-    if(logoPath == nullptr){
+    if(logoPath.isEmpty()){
         QPixmap result;
         result.load(path);
         if (!result.isNull()) {

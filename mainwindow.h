@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
+#include <QLabel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -41,6 +42,9 @@ public:
 
 private:
     QString selectedLogoPath;
+    cv::Mat cachedLogoImage;
+    cv::Mat getResizedLogo(int baseWidth);
+    void setScaledPixmap(QLabel *label, const QPixmap &pixmap);
     Ui::MainWindow *ui;
     bool checkbox1 = false;
     bool checkbox2 = false;
