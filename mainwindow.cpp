@@ -33,6 +33,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->sizeCheckBox4, &QCheckBox::toggled, this, [=](bool checked) {
         checkbox4 = checked;
     });
+    connect(ui->jpgCheckBox, &QCheckBox::toggled, this, [=](bool checked) {
+        jpgCheckBox = checked;
+    });
     ui->widthLineEdit->setEnabled(false);
     ui->heightLineEdit->setEnabled(false);
 
@@ -386,8 +389,16 @@ void MainWindow::on_ApplyButton_clicked(){
             if (stamped.isNull())
                 continue;
 
-            QString savePath = saveDir + "/" + folderName + "/" + baseName + "_stamped." + extension;
-            stamped.save(savePath);
+            if(jpgCheckBox){
+                extension = "jpg";
+                QString savePath = saveDir + "/" + folderName + "/" + baseName + "_stamped." + extension;
+                stamped.save(savePath,"JPG");
+            }
+            else{
+                QString savePath = saveDir + "/" + folderName + "/" + baseName + "_stamped." + extension;
+                stamped.save(savePath);
+            }
+
         }
     }
 }

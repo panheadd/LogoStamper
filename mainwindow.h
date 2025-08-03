@@ -51,6 +51,7 @@ private:
     bool checkbox3 = false;
     bool checkbox4 = false;
     bool customCheckBox = false;
+    bool jpgCheckBox = false;
     LogoPosition logoPosition = MainWindow::LogoPosition::Center;
 };
 #endif // MAINWINDOW_H
