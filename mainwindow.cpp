@@ -106,6 +106,7 @@ void MainWindow::on_SelectLogoButton_clicked()
                 ));
 
             this->selectedLogoPath = filePath;
+            this->cachedLogoImage.release();
         }
         else{
             ui->LogoPreviewLabel->clear();
