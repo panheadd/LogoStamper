@@ -139,7 +139,7 @@ void MainWindow::setScaledPixmap(QLabel *label, const QPixmap &pixmap) {
 
 cv::Mat MainWindow::getResizedLogo(int baseWidth) {
     if (!this->selectedLogoPath.isEmpty() && this->cachedLogoImage.empty()) {
-        this->cachedLogoImage = cv::imread(this->selectedLogoPath.toStdString(), cv::IMREAD_UNCHANGED);
+        this->cachedLogoImage = cv::imread(this->selectedLogoPath.toUtf8().toStdString(), cv::IMREAD_UNCHANGED);
     }
 
     if (this->cachedLogoImage.empty())
@@ -183,7 +183,7 @@ void MainWindow::previewSelectedImage(int index)
 
 QPixmap MainWindow::stampLogoOnImage(const QString &imagePath, const QString &logoPath)
 {
-    cv::Mat mainImg = cv::imread(imagePath.toStdString(), cv::IMREAD_COLOR);
+    cv::Mat mainImg = cv::imread(imagePath.toUtf8().toStdString(), cv::IMREAD_COLOR);
     return stampLogoOnImage(mainImg, logoPath);
 }
 
@@ -372,7 +372,7 @@ void MainWindow::on_ApplyButton_clicked(){
             QSize targetSize = sizes[j];
             QString folderName = folders[j];
 
-            cv::Mat input = cv::imread(imagePath.toStdString(), cv::IMREAD_COLOR);
+            cv::Mat input = cv::imread(imagePath.toUtf8().toStdString(), cv::IMREAD_COLOR);
             if (input.empty())
                 continue;
 
